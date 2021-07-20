@@ -23,6 +23,25 @@ public class SearchController {
         return "search";
     }
 
-    // TODO #3 - Create a handler to process a search request and render the updated search view.
+    // TODO #3 -
+    public String displaySearchResults(Model model, @RequestParam String searchType, @RequestParam String searchTerm) {
+        ArrayList<Job> jobs;
+        if (searchType.toLowerCase().equals("all")) {
+            if (searchType.isEmpty()) {
+                jobs = JobData.findAll();
+                model.addAttribute("title", "All Jobs");
+            } else {
+                jobs = JobData.findByColumnAndValue(searchType, searchTerm);
+                model.addAttribute("title", "Jobs with " + columnChoices.get(searchType) + ": " + searchTerm);
+            }
+        }
+        else {
+            jobs = JobData.findByColumnAndValue(searchType, searchTerm);
+            model.addAttribute("title", "Jobs with " + columnChoices.get(searchType) + ": " + searchTerm);
+        }
+        model.addAttribute("jobs", jobs);
+        return "list-jobs";
+
+    }
 
 }
